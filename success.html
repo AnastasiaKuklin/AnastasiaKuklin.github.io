@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <!-- PRM Online -->
+    <script>
+    !function(e,r,t,n,o){e.prmo=e.prmo||function(){e.prmo.q=e.prmo.q||[],e.prmo.q.push(arguments)},n=r.getElementsByTagName(t)[0],(o=r.createElement(t)).async=!0,o.src="https://c1.prmonline.ru/js/track.js",n.parentNode.insertBefore(o,n)}(window,document,"script");
+    prmo('init', 'bfyt74-8eou3h-5vx2');
+    prmo('track', 'FOLLOW');
+    </script>
+    <!-- / PRM Online -->
+    <meta charset="UTF-8">
+    <title>Заказ принят!</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        .btn { background: #003366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+        .order-details { margin: 20px auto; max-width: 500px; text-align: left; }
+    </style>
+</head>
+<body>
+    <h1>Спасибо за заказ!</h1>
+    
+    <div class="order-details" id="orderDetails">
+        <!-- Сюда подгрузятся данные из localStorage -->
+    </div>
+    
+    <a href="index.html" class="btn">Вернуться на главную</a>
+    
+    <script>
+        // Показываем данные последнего заказа
+        const lastOrder = JSON.parse(localStorage.getItem('lastOrder'));
+        if (lastOrder) {
+            document.getElementById('orderDetails').innerHTML = `
+                <p><strong>Маршрут:</strong> ${lastOrder.from} → ${lastOrder.to}</p>
+                <p><strong>Дата:</strong> ${lastOrder.date}</p>
+                <p><strong>Имя:</strong> ${lastOrder.name}</p>
+                <p><strong>Телефон:</strong> ${lastOrder.phone}</p>
+            `;
+        }
+    </script>
+</body>
+</html>

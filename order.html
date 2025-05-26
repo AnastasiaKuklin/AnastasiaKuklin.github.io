@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <!-- PRM Online -->
+    <script>
+    !function(e,r,t,n,o){e.prmo=e.prmo||function(){e.prmo.q=e.prmo.q||[],e.prmo.q.push(arguments)},n=r.getElementsByTagName(t)[0],(o=r.createElement(t)).async=!0,o.src="https://c1.prmonline.ru/js/track.js",n.parentNode.insertBefore(o,n)}(window,document,"script");
+    prmo('init', 'bfyt74-8eou3h-5vx2');
+    prmo('track', 'FOLLOW');
+    </script>
+    <!-- / PRM Online -->
+    <meta charset="UTF-8">
+    <title>Оформление заказа</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .btn { background: #FF9900; color: white; padding: 10px 20px; border: none; border-radius: 5px; }
+        input, select { width: 100%; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Оформление трансфера</h2>
+        <form id="orderForm">
+            <input type="text" placeholder="Откуда (город/адрес)" required>
+            <input type="text" placeholder="Куда (город/адрес)" required>
+            <input type="datetime-local" placeholder="Дата и время" required>
+            <select>
+                <option>Эконом (до 3 пассажиров)</option>
+                <option>Комфорт (до 4 пассажиров)</option>
+                <option>Бизнес (до 3 пассажиров)</option>
+            </select>
+            <input type="text" placeholder="Ваше имя" required>
+            <input type="tel" placeholder="Телефон" required>
+            <button type="submit" class="btn">Заказать</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Сохраняем данные в localStorage (для демо)
+            const orderData = {
+                from: this.elements[0].value,
+                to: this.elements[1].value,
+                date: this.elements[2].value,
+                name: this.elements[4].value,
+                phone: this.elements[5].value
+            };
+            localStorage.setItem('lastOrder', JSON.stringify(orderData));
+            
+            // Переход на страницу успеха
+            window.location.href = 'success.html';
+        });
+    </script>
+</body>
+</html>
