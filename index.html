@@ -5,6 +5,7 @@
     <script>
     !function(e,r,t,n,o){e.prmo=e.prmo||function(){e.prmo.q=e.prmo.q||[],e.prmo.q.push(arguments)},n=r.getElementsByTagName(t)[0],(o=r.createElement(t)).async=!0,o.src="https://c1.prmonline.ru/js/track.js",n.parentNode.insertBefore(o,n)}(window,document,"script");
     prmo('config', 'refLinkParam', 'refLinkId');
+    prmo('config', 'TTL', 90);
     prmo('init', 'bfyt74-8eou3h-5vx2');
     prmo('track', 'FOLLOW');
     </script>
@@ -25,5 +26,24 @@
     <div class="container">
         <a href="order.html" class="btn">Заказать трансфер</a>
     </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        let refLinkId = urlParams.get('refLinkId');
+        if (!refLinkId) {
+            refLinkId = urlParams.get('rl') || urlParams.get('reflinkid');
+        }
+        if (refLinkId) {
+        // Принудительно устанавливаем cookies
+            document.cookie = `_p_rlid=${refLinkId}; path=/; max-age=7776000`; // 90 дней
+            console.log('PRM: Установлен refLinkId', refLinkId);
+    
+        // Отправляем событие с явными параметрами
+            prmo('trackEx', {
+                event: 'FOLLOW',
+                entityIdent: refLinkId,
+                debug: true
+            });
+        }
+    </script>
 </body>
 </html>
