@@ -4,8 +4,11 @@
     <!-- PRM Online -->
     <script>
     !function(e,r,t,n,o){e.prmo=e.prmo||function(){e.prmo.q=e.prmo.q||[],e.prmo.q.push(arguments)},n=r.getElementsByTagName(t)[0],(o=r.createElement(t)).async=!0,o.src="https://c1.prmonline.ru/js/track.js",n.parentNode.insertBefore(o,n)}(window,document,"script");
-    prmo('config', 'refLinkParam', 'refLinkId');
-    prmo('config', 'TTL', 90);
+    prmo('config', {
+    refLinkParam: 'refLinkId',
+    TTL: 90,
+    forceTracking: true // Принудительная отправка
+    });
     prmo('init', 'bfyt74-8eou3h-5vx2');
     </script>
     <!-- / PRM Online -->
@@ -26,23 +29,48 @@
         <a href="order.html" class="btn">Заказать трансфер</a>
     </div>
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        let refLinkId = urlParams.get('refLinkId');
-        if (!refLinkId) {
-            refLinkId = urlParams.get('rl') || urlParams.get('reflinkid');
+        const refLinkId = (new URLSearchParams(window.location.search)).get('refLinkId');
+
+        if(refLinkId) {
+            // Жесткая установка всех требуемых cookies
+            const cookieSettings = '; path=/; max-age=7776000; SameSite=Lax';
+            document.cookie = `_p_rlid=${refLinkId}${cookieSettings}`;
+            document.cookie = `_p_pid=${refLinkId}${cookieSettings}`;
+            
+            // Альтернативный метод отправки
+            fetch('https://api.prmonline.ru/track', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    event: 'FOLLOW',
+                    entityIdent: refLinkId,
+                    key: 'bfyt74-8eou3h-5vx2', // Тот же ключ что в init
+                    debug: true,
+                    force: 1
+                })
+            }).then(r => r.json()).then(console.log);
         }
-        if (refLinkId) {
-        // Принудительно устанавливаем cookies
-            document.cookie = `_p_rlid=${refLinkId}; path=/; max-age=7776000`; // 90 дней
-            console.log('PRM: Установлен refLinkId', refLinkId);
-    
-        // Отправляем событие с явными параметрами
-            prmo('trackEx', {
-                event: 'FOLLOW',
-                entityIdent: refLinkId,
-                debug: true
+
+        // 4. Отправка заказа с дублированием
+        document.getElementById('orderForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const orderData = {
+                event: 'NEW',
+                entityIdent: refLinkId || 'DIRECT',
+                name: this.elements.name.value,
+                phone: this.elements.phone.value,
+                tranId: 'order_' + Date.now(),
+                key: 'bfyt74-8eou3h-5vx2'
+            };
+
+            // Двойная отправка (через API и стандартный метод)
+            prmo('trackEx', {...orderData, debug: true, force: 1});
+            fetch('https://api.prmonline.ru/track', {
+                method: 'POST',
+                body: JSON.stringify(orderData)
             });
-        }
+        });
     </script>
 </body>
 </html>
